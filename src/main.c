@@ -11,14 +11,33 @@ int game(SDL_Renderer *renderer) {
 	int POXELS_X_COUNT = SCREEN_WIDTH / 16;
 	int POXELS_Y_COUNT = SCREEN_HEIGHT / 16;
 
+	int PlayerX = 5;
+	int PlayerY = 5;
+
+	// CREATE MAP
+
     t_poxel **map = (t_poxel **)malloc(sizeof(t_poxel *) * POXELS_X_COUNT);
     for (int x = 0; x < POXELS_X_COUNT; x++) {
         map[x] = (t_poxel *)malloc(sizeof(t_poxel) * POXELS_Y_COUNT);
 
         for (int y = 0; y < POXELS_Y_COUNT; y++) {
-            map[x][y] = pox_create_poxel(x, y, Rock);
+            map[x][y] = pox_create_poxel(x, y, Air);
 		}
 	}
+
+	for (int x = 0; x < POXELS_X_COUNT; x++) {
+		for (int y = POXELS_Y_COUNT / 2; y < POXELS_Y_COUNT; y++) {
+			map[x][y] = pox_create_poxel(x, y, Dirt);
+		}
+	}
+
+	for (int x = 0; x < POXELS_X_COUNT; x++) {
+		for (int y = POXELS_Y_COUNT - POXELS_Y_COUNT / 5; y < POXELS_Y_COUNT; y++) {
+			map[x][y] = pox_create_poxel(x, y, Rock);
+		}
+	}
+
+	// MAP CREATE END
 
     while (running) {
 
@@ -38,6 +57,8 @@ int game(SDL_Renderer *renderer) {
         		pox_draw_pixel_in_grid(renderer, map[x][y].x, map[x][y].y, 16, 16, map[x][y].color);
 			}
 		}
+
+		pox_draw_pixel_in_grid(renderer, PlayerX, PlayerY, 16, 16, pox_create_color(255, 0, 0, 255));
 
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
